@@ -3,12 +3,14 @@
 ## Project Information
 - Repository: toxic0904/DevOps-Documentation
 - Branch: main
-- Total Commits: 5
+- Total Commits: 7
 
 ## Latest Commit
-cdad61e - Fix documentation automation workflow
+3ec32d4 - Update application functionality
 
 ## Commit History
+- 3ec32d4 - Nikhil - Update application functionality
+- ba96451 - github-actions[bot] - Update project documentation
 - cdad61e - Nikhil - Fix documentation automation workflow
 - 391a27d - Nikhil - Add documentation automation workflow
 - 17dae3a - Nikhil - Add documentation folder
@@ -17,11 +19,12 @@ cdad61e - Fix documentation automation workflow
 
 ## Contributors
 - Nikhil
+- github-actions[bot]
 - nikhil
 
 ## Repository Statistics
-- Files: 5
-- Commits: 5
+- Files: 6
+- Commits: 7
 - Branch: main
 
 ## Workflow Summary
