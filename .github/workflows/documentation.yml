@@ -1,63 +1,35 @@
-name: Generate Documentation
 
-on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - "PROJECT DOCUMENTATION.md"
+name: Add documentation automation workflow
+
+on: [push, workflow_dispatch]
 
 permissions:
   contents: write
 
 jobs:
-  documentation:
+  generate-documentation:
+    name: Generate Markdown Documentation
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Generate documentation
-        run: |
-          echo "# PROJECT DOCUMENTATION" > "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
-          echo "## Project Information" >> "PROJECT DOCUMENTATION.md"
-          echo "- Repository: ${{ github.repository }}" >> "PROJECT DOCUMENTATION.md"
-          echo "- Branch: main" >> "PROJECT DOCUMENTATION.md"
-          echo "- Total Commits: $(git rev-list --count HEAD)" >> "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
+      - name: Generate Documentation
+        run: python3 generate_docs.py
 
-          echo "## Latest Commit" >> "PROJECT DOCUMENTATION.md"
-          git log -1 --pretty=format:"%h - %s" >> "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
-
-          echo "## Commit History" >> "PROJECT DOCUMENTATION.md"
-          git log --pretty=format:"- %h - %an - %s" >> "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
-
-          echo "## Contributors" >> "PROJECT DOCUMENTATION.md"
-          git log --format='%an' | sort -u | sed 's/^/- /' >> "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
-
-          echo "## Repository Statistics" >> "PROJECT DOCUMENTATION.md"
-          echo "- Files: $(git ls-files | wc -l | tr -d ' ')" >> "PROJECT DOCUMENTATION.md"
-          echo "- Commits: $(git rev-list --count HEAD)" >> "PROJECT DOCUMENTATION.md"
-          echo "- Branch: main" >> "PROJECT DOCUMENTATION.md"
-          echo "" >> "PROJECT DOCUMENTATION.md"
-
-          echo "## Workflow Summary" >> "PROJECT DOCUMENTATION.md"
-          echo "- Documentation is generated automatically using GitHub Actions." >> "PROJECT DOCUMENTATION.md"
-          echo "- Documentation is updated whenever changes are pushed to the main branch." >> "PROJECT DOCUMENTATION.md"
-
-      - name: Commit documentation
+      - name: Commit Documentation
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "PROJECT DOCUMENTATION.md"
-          git diff --cached --quiet || git commit -m "Update project documentation"
-          git push
+
+          git add docs/CHANGELOG.md
+
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: update changelog automatically"
+            git push
+          else
+            echo "Documentation is already up to date."
+          fi
